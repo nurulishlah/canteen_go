@@ -6,7 +6,7 @@ import 'package:flutter_test/flutter_test.dart';
 
 class MockMenuRepo implements MenuRepo {
   @override
-  Future<List<MenuItem>> fetchMenu() async {
+  Future<List<MenuItem>> fetchMenu({bool refresh = false}) async {
     return const [
       MenuItem(id: 't1', name: 'Test Item 1', price: 1000),
       MenuItem(id: 't2', name: 'Test Item 2', price: 2000),
@@ -16,7 +16,7 @@ class MockMenuRepo implements MenuRepo {
 
 class ErrorMenuRepo implements MenuRepo {
   @override
-  Future<List<MenuItem>> fetchMenu() async {
+  Future<List<MenuItem>> fetchMenu({bool refresh = false}) async {
     throw Exception('Failed to fetch menu');
   }
 }
