@@ -1,19 +1,12 @@
-import 'package:canteen_go/src/core/storage/isar_db.dart';
 import 'package:canteen_go/src/features/menu/data/repo/menu_repo.dart';
 import 'package:canteen_go/src/features/menu/domain/models/menu_item.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:isar/isar.dart';
 
 final menuRepoProvider = Provider<MenuRepo>((ref) {
-  final isarAsync = ref.watch(isarProvider);
-  return isarAsync.when(
-    data: (isar) => IsarMenuRepo(isar),
-    loading: () => FakeMenuRepo(), // Fallback or loading state repo
-    error: (_, __) => FakeMenuRepo(),
-  );
+  // On web: FakeMenuRepo is used (no Isar)
+  // On native: Will be overridden by main.dart with IsarMenuRepo
+  return FakeMenuRepo();
 });
-
-final isarProvider = FutureProvider<Isar>((ref) => IsarDB.instance());
 
 final menuControllerProvider =
     StateNotifierProvider<MenuController, AsyncValue<List<MenuItem>>>((ref) {

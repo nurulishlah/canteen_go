@@ -6,22 +6,20 @@ import 'package:path_provider/path_provider.dart';
 class IsarDB {
   static Isar? _instance;
 
-  static Future<Isar> instance() async {
+  /// Returns an Isar instance for native platforms.
+  /// Returns `null` on web (Isar has JS integer precision issues).
+  static Future<Isar?> instance() async {
+    // Skip Isar on web - use API-only mode
+    if (kIsWeb) return null;
+
     if (_instance != null) return _instance!;
-    if (kIsWeb) {
-      _instance = await Isar.open(
-        [MenuItemIsarSchema],
-        inspector: false,
-        directory: 'isar',
-      );
-    } else {
-      final dir = await getApplicationDocumentsDirectory();
-      _instance = await Isar.open(
-        [MenuItemIsarSchema],
-        directory: dir.path,
-        inspector: false,
-      );
-    }
+
+    final dir = await getApplicationDocumentsDirectory();
+    _instance = await Isar.open(
+      [MenuItemIsarSchema],
+      directory: dir.path,
+      inspector: false,
+    );
     return _instance!;
   }
 }
